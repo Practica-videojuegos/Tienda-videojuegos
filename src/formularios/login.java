@@ -5,6 +5,17 @@
  */
 package formularios;
 
+//import conexion.ConexionBD;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author josep
@@ -29,10 +40,9 @@ public class login extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtPass = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -47,13 +57,14 @@ public class login extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Password");
 
-        jButton1.setBackground(new java.awt.Color(0, 153, 204));
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton1.setText("Agregar Usuario");
-
         jButton2.setBackground(new java.awt.Color(0, 153, 204));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton2.setText("Iniciar Sesion");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -67,14 +78,13 @@ public class login extends javax.swing.JFrame {
                 .addContainerGap(46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(141, 141, 141)
                         .addComponent(jButton2))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel3)
                         .addComponent(jLabel2)
                         .addComponent(txtPass)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
@@ -85,20 +95,119 @@ public class login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addComponent(jButton2)
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+            String usu=txtUsuario.getText();
+            String pass= new String(txtPass.getPassword()); 
+            String Tipo = null;
+            String nombre;
+            int id;
+            try {
+            // TODO add your handling code here:
+            String url = "jdbc:mysql://geoconstructor.com:3306/geoconst_Practica5";
+            String usuario = "geoconst";
+            String passw= "##Geo##2018";
+            String sql = "SELECT *FROM Usuarios WHERE Usuario= '"+usu+"'&& Pass='"+pass+"'";
+            Connection cn= (Connection) DriverManager.getConnection(url, usuario, passw);
+            
+            PreparedStatement pst = (PreparedStatement) cn.prepareStatement(sql);
+            ResultSet rs =pst.executeQuery(sql);
+             while(rs.next()){
+                    Tipo=rs.getString("Tipo");
+                    nombre=rs.getString("Nombre");
+                      id= rs.getInt("id");
+                    
+            
+            
+            }if(Tipo.equals("Administrador")){
+                System.out.println("Hola administrador");
+                JOptionPane.showMessageDialog(null, "Bienvenido Administrador ");
+            }
+            if(Tipo.equals("Cliente")){
+            
+                //this.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Bienvenido: ");
+              //  System.out.println(id);
+               // Main main= new Main(id);
+                //main.setVisible(true);
+            
+            }else
+            if((!Tipo.equals("Administrador"))&&(!Tipo.equals("Cliente"))){
+            
+                JOptionPane.showMessageDialog(this,"No existe este usuario");
+            
+            }
+            
+            
+           
+            // Acceder(usu,pass);
+        } catch (SQLException ex) {
+            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+public void Acceder(String usuario,String pass){
+  /*
+    String cap= "";
+    String nombre=" ";
+            
+    String sql=("SELECT *FROM usuarios WHERE usuario= '"+usuario+"'&& pass='"+pass+"'");
+        try {
+            
+           /*  Connection cnx2 = (Connection) ConexionBD.getConection();
+          PreparedStatement pst = (PreparedStatement) cnx2.prepareStatement;
+            Statement st= (Statement) cn.createStatement();
+            ResultSet rs= st.executeQuery(sql);
+            ////
+    Connection cnx = (Connection) ConexionBD.getConection();
+        Statement st= (Statement) cnx.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                    cap=rs.getString("TipoUsuario");
+                    nombre=rs.getString("Nombre");
+                      id= rs.getInt("id");
+                    
+            
+            
+            }if(cap.equals("Administrador")){
+            
+                this.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Bienvenido: Administrador");
+            //    EditarUsuarioAdmin admin = new EditarUsuarioAdmin();
+               // admin.setVisible(true);
+                
+            }
+            if(cap.equals("Cliente")){
+            
+                this.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Bienvenido: ");
+              //  System.out.println(id);
+               // Main main= new Main(id);
+                //main.setVisible(true);
+            
+            }else
+            if((!cap.equals("Administrador"))&&(!cap.equals("Cliente"))){
+            
+                JOptionPane.showMessageDialog(this,"No existe este usuario");
+            }
+            } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+  
+}*/
+}
+        
+        
 
     /**
      * @param args the command line arguments
@@ -126,6 +235,7 @@ public class login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -136,12 +246,11 @@ public class login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPasswordField txtPass;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
