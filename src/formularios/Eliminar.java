@@ -5,17 +5,46 @@
  */
 package formularios;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+import conexion.ProductosBD;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author josep
  */
 public class Eliminar extends javax.swing.JFrame {
 
+    ArrayList <Productos> productos;
+    ProductosBD db= new ProductosBD();
+    int idx;
+    
+     public void ListarDatos (){
+//        LimpiarFormulario();
+        productos= db.ListaProductos();
+        DefaultTableModel tb= (DefaultTableModel)jTable1.getModel();
+        for(Productos pro: productos){
+            tb.addRow(new Object[]{pro.getId(),pro.getNombre()});
+          
+        }
+      //  ListaId();
+    //  System.out.println("holaaaaaa"+tb.getValueAt(0,0));
+   
+    }
     /**
      * Creates new form Eliminar
      */
     public Eliminar() {
         initComponents();
+          ListarDatos ();   
     }
 
     /**
@@ -28,43 +57,24 @@ public class Eliminar extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Eliminar");
 
-        jTable1.setBackground(new java.awt.Color(204, 204, 204));
-        jTable1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTable1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "ID", "Nombre"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
         jButton1.setBackground(new java.awt.Color(51, 204, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("Eliminar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(51, 204, 255));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -75,18 +85,37 @@ public class Eliminar extends javax.swing.JFrame {
             }
         });
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "Nombre"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(172, 172, 172)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(172, 172, 172)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(161, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(69, 69, 69)
@@ -100,12 +129,12 @@ public class Eliminar extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(93, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addContainerGap(269, Short.MAX_VALUE)
+                    .addContainerGap(354, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton1)
                         .addComponent(jButton2))
@@ -117,7 +146,50 @@ public class Eliminar extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       int row = jTable1.getSelectedRow();
+        if(row==-1){
+        JOptionPane.showMessageDialog(rootPane, "Seleccione un elemento", "Error", JOptionPane.ERROR_MESSAGE);
+        }else{
+        //jPanel2.setVisible(false);
+        //jPanel3.setVisible(true);
+               // TODO add your handling code here:
+               
+         try{
+             
+            //Connection cnx = (Connection) ConexionBD.getConection();
+           int idx= Integer.parseInt(jTable1.getValueAt(row, 0).toString());
+             System.out.println(idx);
+            String url = "jdbc:mysql://geoconstructor.com:3306/geoconst_Practica5";
+            String usuario = "geoconst";
+            String passw= "##Geo##2018";
+            //String sql = ("DELETE FROM Producto where Producto.Id= ' "+ idx+ " '");
+            Connection cn= (Connection) DriverManager.getConnection(url, usuario, passw);
+            
+           // Statement ps = (Statement) cn.createStatement();
+            //ps.executeQuery(sql); 
+            PreparedStatement st = (PreparedStatement) cn.prepareStatement("DELETE FROM Producto WHERE Id = " + idx + ";");
+          st.executeUpdate();
+            JOptionPane.showMessageDialog(rootPane, "Producto eliminado correctamente.");
+        //("DELETE FROM  carbohidratos where carbohidratos.id= ' "+ idx+ " '");
+         /*
+  
+        connection.close();
+ 
+            
+           *///LimpiarFormulario();
+            //istarDatos();
+             //  this.dispose();
+        }catch(SQLException ex){
+          //   Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
+        }
+    
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -158,7 +230,7 @@ public class Eliminar extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

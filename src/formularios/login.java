@@ -149,6 +149,8 @@ public class login extends javax.swing.JFrame {
             }if(Tipo.equals("Administrador")){
                 System.out.println("Hola administrador");
                 JOptionPane.showMessageDialog(null, "Bienvenido Administrador ");
+                Administrador adm= new Administrador ();
+                adm.setVisible(true);
             }
             if(Tipo.equals("Cliente")){
             
