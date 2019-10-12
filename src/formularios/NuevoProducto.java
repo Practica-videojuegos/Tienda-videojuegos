@@ -5,12 +5,20 @@
  */
 package formularios;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author josep
  */
 public class NuevoProducto extends javax.swing.JFrame {
-
+String Categoria;
     /**
      * Creates new form NuevoProducto
      */
@@ -32,9 +40,9 @@ public class NuevoProducto extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
+        txtCantidad = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -59,13 +67,23 @@ public class NuevoProducto extends javax.swing.JFrame {
         jLabel5.setText("Categoria");
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Videojuegos Xbox One", "Videojuegos PS4", "Videojuegos Switch", "Consolas", "Accesorios", " " }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
 
         jButton1.setBackground(new java.awt.Color(51, 153, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("Agregar producto");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(51, 204, 255));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -107,9 +125,9 @@ public class NuevoProducto extends javax.swing.JFrame {
                                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField1)
-                                .addComponent(jTextField2)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(txtNombre)
+                                .addComponent(txtPrecio)
+                                .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(77, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -119,16 +137,16 @@ public class NuevoProducto extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
@@ -149,6 +167,69 @@ public class NuevoProducto extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String nombre= txtNombre.getText();
+        String Precio = txtPrecio.getText();
+        String Cantidad= txtCantidad.getText();
+      //  String Categoria;
+         
+        
+        try {
+            
+            // TODO add your handling code here:
+            String url = "jdbc:mysql://geoconstructor.com:3306/geoconst_Practica5";
+            String usuario = "geoconst";
+            String passw= "##Geo##2018";
+            String sql = "INSERT INTO Producto(Nombre,Precio,Cantidad,id_Categoria)VALUES(?,?,?,?)";
+             PreparedStatement ps;
+            Connection cn= (Connection) DriverManager.getConnection(url, usuario, passw);
+            //INSERT INTO `Usuarios` (`Id`, `Nombre`, `Usuario`, `Pass`, `Tipo`) VALUES (NULL, 'Juan Escutia', 'JEscutia', '1235', 'Cliente');
+            //PreparedStatement pst = (PreparedStatement) cn.prepareStatement(sql);
+           // ResultSet rs =pst.executeQuery(sql);
+         //  Statement statement = (Statement) cn.createStatement();
+           //statement
+           //statement.executeUpdate(sql);
+            ps= (PreparedStatement) cn.prepareStatement(sql);
+           //INSERT INTO `pacientes` (`id`, `Nombre`, `Edad`, `Estatura`, `MetabolismoBasal`, `CaloriasDiarias`, `CaloriasObjetivo`, `PorcentajeGrasa`, `NivelActividad`) VALUES ('1', 'juanito', '23', '179', NULL, NULL, NULL, NULL, '1.2');
+           
+            if (jComboBox1.getSelectedItem().equals("Videojuegos PS4")){
+         Categoria="1";
+         }
+            if (jComboBox1.getSelectedItem().equals("Videojuegos Xbox One")){
+         Categoria="2";
+         }
+            if (jComboBox1.getSelectedItem().equals("Videojuegos Switch")){
+         Categoria="3";
+         }
+              if (jComboBox1.getSelectedItem().equals("Consolas")){
+         Categoria="5";
+         }
+            
+            ps.setString(1,nombre);
+            ps.setString(2,Precio);
+            ps.setString(3,Cantidad);
+            ps.setString(4,Categoria);
+            ps.executeUpdate();
+            
+            cn.close();
+          JOptionPane.showMessageDialog(null, "Agregado a la base de datos");
+            
+           
+            
+            
+           
+            // Acceder(usu,pass);
+        } catch (SQLException ex) {
+            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       // System.out.println(pass);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,8 +277,8 @@ public class NuevoProducto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 }
