@@ -5,6 +5,16 @@
  */
 package formularios;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author josep
@@ -34,8 +44,6 @@ public class Usuarios extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtPass = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        txtTipo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
@@ -57,13 +65,9 @@ public class Usuarios extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(51, 204, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("Agregar Usuario");
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setText("Tipo");
-
-        txtTipo.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTipoActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -79,6 +83,11 @@ public class Usuarios extends javax.swing.JFrame {
         jButton2.setBackground(new java.awt.Color(51, 204, 255));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton2.setText("Regresar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,11 +98,9 @@ public class Usuarios extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel4)
-                        .addComponent(jLabel3)
                         .addComponent(jLabel2)
                         .addComponent(jLabel1)
                         .addComponent(txtNombre)
-                        .addComponent(txtTipo)
                         .addComponent(txtUsuario)
                         .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -109,19 +116,15 @@ public class Usuarios extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(28, 28, 28)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(33, 33, 33)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -135,13 +138,56 @@ public class Usuarios extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
-    private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTipoActionPerformed
-
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String nombre=txtNombre.getText();
+        String Usuario= txtUsuario.getText();
+        String pass= txtPass.getText();
+     try {
+            // TODO add your handling code here:
+            String url = "jdbc:mysql://geoconstructor.com:3306/geoconst_Practica5";
+            String usuario = "geoconst";
+            String passw= "##Geo##2018";
+            String sql = "INSERT INTO Usuarios(Nombre,Usuario,Pass,Tipo)VALUES(?,?,?,?)";
+             PreparedStatement ps;
+            Connection cn= (Connection) DriverManager.getConnection(url, usuario, passw);
+            //INSERT INTO `Usuarios` (`Id`, `Nombre`, `Usuario`, `Pass`, `Tipo`) VALUES (NULL, 'Juan Escutia', 'JEscutia', '1235', 'Cliente');
+            //PreparedStatement pst = (PreparedStatement) cn.prepareStatement(sql);
+           // ResultSet rs =pst.executeQuery(sql);
+         //  Statement statement = (Statement) cn.createStatement();
+           //statement
+           //statement.executeUpdate(sql);
+            ps= (PreparedStatement) cn.prepareStatement(sql);
+           //INSERT INTO `pacientes` (`id`, `Nombre`, `Edad`, `Estatura`, `MetabolismoBasal`, `CaloriasDiarias`, `CaloriasObjetivo`, `PorcentajeGrasa`, `NivelActividad`) VALUES ('1', 'juanito', '23', '179', NULL, NULL, NULL, NULL, '1.2');
+           
+            ps.setString(1,nombre);
+            ps.setString(2,Usuario);
+            ps.setString(3,pass);
+            ps.setString(4,"Cliente");
+            ps.executeUpdate();
+            
+            cn.close();
+          JOptionPane.showMessageDialog(null, "Agregado a la base de datos");
+            
+           
+            
+            
+           
+            // Acceder(usu,pass);
+        } catch (SQLException ex) {
+            Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(pass);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,11 +229,9 @@ public class Usuarios extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JPasswordField txtPass;
-    private javax.swing.JTextField txtTipo;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
